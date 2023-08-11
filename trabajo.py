@@ -8,7 +8,7 @@ class Quiniela:
     nroSorteados = [] 
     nroSorteadosQUini =[]
     apuestas = []
-    ganado = 0
+    montoTotal = 0
     comprobantes = 0
    #metodo que se ejecuta solo una vez en la vida del programa
     def inicio(self):
@@ -54,6 +54,7 @@ class Quiniela:
         print("********************************\n")  
         apuesta = input("Ingrese un numero entre 2 o 4 cifras: ")
         monto = float(input("Ingrese el monto de la apuesta($): "))
+        Quiniela.montoTotal += monto
         ## while para que el usuario si o si ponga un numero de 1 a 4 digitos 
         while len(apuesta) < 2 or len(apuesta) > 4:
             print("La apuesta debe tener entre 2 y 4 cifras")
@@ -98,31 +99,20 @@ class Quiniela:
 
         print("Apuesta generada: ",nrosQuini)
         monto = float(input("Ingrese el monto de la apuesta($): "))
+        Quiniela.montoTotal += monto
         hora = datetime.datetime.now()
         Quiniela.generarTicket("Quini6",nrosQuini,monto,hora)
 
     @staticmethod    
     def comprobar():
         os.system('cls')
-        gano = False
         print("\n\n********************************")
         print("            SORTEO")
         print("********************************\n")
         Quiniela.sortearNumeros()
-        for i in range(len(Quiniela.apuestas)):
-
-            for j in range(len(Quiniela.nroSorteados)):
-                if Quiniela.apuestas[i]["apuesta"] in Quiniela.nroSorteados[j]:
-                    print("__________________________________________________________")
-                    print(f"Tcket Nro. {Quiniela.apuestas[i]['comprobante']} ganador")
-                    print(f"Apuesta al: {Quiniela.apuestas[i]['apuesta']}")
-                    print(f"Número ganador: {Quiniela.nroSorteados[j]}")
-                    Quiniela.ganado += Quiniela.apuestas[i]['monto']*500
-                    print(f"Monto ganado: ${ Quiniela.apuestas[i]['monto']*500}")
-                    print(f"Monto total:  ${Quiniela.ganado}")
-                    print("__________________________________________________________")
-                    gano = True
-        if not gano :
+        Quiniela.ganadores("Quiniela")
+        Quiniela.ganadores("Quini6")
+        if not Quiniela.ganadores() :  # si no se gana nada devuelve un false
             print("No haz ganado nada")
         Quiniela.nroSorteados = []
         Quiniela.apuestas = []
@@ -130,8 +120,32 @@ class Quiniela:
 
     @staticmethod    
     def arquear(): 
-        print("arqueo")
+        neto = round(Quiniela.montoTotal-Quiniela.montoTotal* 0.47)
+        print("-------------------------------------------\n")
+        print(f"Monto en apuestas: ${Quiniela.montoTotal}")
+        print(f"-${round(Quiniela.montoTotal* 0.47,2)} retención del Estado")
 
+        print(f"Ganacia neta: ${neto}")
+        print("\n-------------------------------------------")
+
+        Quiniela.montoTotal = 0
+        input("Presione enter para continuar")
+
+    @staticmethod
+    def ganadores(juego):
+        gano =False
+        for i in range(len(Quiniela.apuestas)):
+            for j in range(len(Quiniela.nroSorteados)):
+                if Quiniela.apuestas[i]["apuesta"] in Quiniela.nroSorteados[j]:
+                    print("__________________________________________________________")
+                    print(f"Tcket Nro. {Quiniela.apuestas[i]['comprobante']} ganador")
+                    print(f"Apuesta al: {Quiniela.apuestas[i]['apuesta']}")
+                    print(f"Número ganador: {Quiniela.nroSorteados[j]}")
+                    print(f"Monto ganado: ${ Quiniela.apuestas[i]['monto']*500}")
+                    print("__________________________________________________________")
+                    gano = True
+        return gano
+                
     @staticmethod
     def generarTicket(juego,apuesta,monto,hora):
         os.system('cls')
