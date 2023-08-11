@@ -107,6 +107,7 @@ class Quiniela:
         gano = False
         print("\n\n********************************")
         print("            SORTEO")
+        print("********************************\n")
         Quiniela.sortearNumeros()
         for i in range(len(Quiniela.apuestas)):
 
@@ -147,11 +148,15 @@ class Quiniela:
     
     @staticmethod
     def sortearNumeros():
-
+        os.system('cls')
         # Sorteo del quini
         Quiniela.nroSorteadosQuini6 = Quiniela.sorteadorQuini6()
-            
-        print(Quiniela.nroSorteadosQuini6)
+        
+        print("\n---------Sorteo quini6------------\n")
+        for i in range(len(Quiniela.nroSorteadosQuini6)):
+         print(f"{Quiniela.nroSorteadosQuini6[i]}",end=" ")
+        
+        print("\n\n---------Sorteo quiniela------------\n")
         # Sorteo de la quiniela
         for i in range(20):
          nro = ""
@@ -171,7 +176,7 @@ class Quiniela:
                     print(f"{i+1}. {Quiniela.nroSorteados[i]}",end=" ")
                 else:
                     print(f"{i+1}. {Quiniela.nroSorteados[i]}")
-                
+        print("----------------------------------\n")       
           
            
          
@@ -183,20 +188,27 @@ class Quiniela:
         input("Presione enter para continuar")
     @staticmethod
     def sorteadorQuini6():
-            nrosQuini = []
+        nrosQuini = []
+
+            #no juzguen mis metodos sino mis resultados xD
+        for i in range(6):
+            resultado = Quiniela.nroAleatoriosNoRepetidos()
+            while resultado in nrosQuini:
+                 resultado= Quiniela.nroAleatoriosNoRepetidos()
+            nrosQuini.append(resultado)
+        return nrosQuini
+    @staticmethod
+    def nroAleatoriosNoRepetidos():
             for i in range(6):
              primerNro = randint(0,4)
              if primerNro == 4:
                  sengundoNro = randint(0,5)
              if primerNro == 0:
                  sengundoNro = randint(1,9)
-             else: sengundoNro = randint(0,9)
-             resultado = str(primerNro)+str(sengundoNro) 
-             if resultado in nrosQuini:
-                 i -= 1
-             else:
-                nrosQuini.append(resultado)
-            return nrosQuini
+             else: 
+                 sengundoNro = randint(0,9)
+
+             return str(primerNro)+str(sengundoNro)
 if __name__ == "__main__":
     quiniela = Quiniela()
     quiniela.inicio()
